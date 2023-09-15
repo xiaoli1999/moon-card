@@ -1,0 +1,51 @@
+@import url("./normalize.less");
+
+* { /* 火狐 */ /* webkit浏览器 */ /* IE10 */
+    user-select: none;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    line-height: 1;
+
+    .scroll-hide;
+}
+
+html,
+body {
+    overflow: hidden;
+    width: 100%;
+}
+
+body {
+    position: relative;
+    font-family: MicrosoftYaHei, sans-serif;
+    background: #a0cfff;
+}
+
+img {
+    display: block;
+}
+
+a:hover,
+a:visited,
+a:link,
+a:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.scroll-hide {
+    &::-webkit-scrollbar {
+        display: none;
+        width: 0;
+    }
+}
+
+#app {
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
+    min-height: 100vh;
+    color: #f4f4f4;
+}
