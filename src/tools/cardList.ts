@@ -12,7 +12,7 @@ export const cardList = [
         name: '送祝福',
         desc: '千里共赏明月夜',
         designInfo: {
-            bg: '',
+            bg: 'https://cdn.xiaoli.vip/project/moon-card/bg-1.png',
             layerList: []
         }
     },

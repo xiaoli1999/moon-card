@@ -9,7 +9,7 @@
 import { fabric } from 'fabric'
 import { Canvas, StaticCanvas } from 'fabric/fabric-impl'
 import { addOrReplaceLayer } from './common'
-import { canvasType } from '../config/canvas'
+import { CanvasSizeType } from '../config/canvas'
 import { fixedLayerName } from '../config/name'
 
 
@@ -20,7 +20,7 @@ import { fixedLayerName } from '../config/name'
  * @param { Boolean } isStatic 是否静态画布
  * @return { Object } Canvas 返回画布实例对象
  */
-export const initCanvas = (inkId: string, size: canvasType, isStatic: boolean) => {
+export const initCanvas = (inkId: string, size: CanvasSizeType, isStatic= true) => {
     const Canvas: Canvas | StaticCanvas = new fabric[isStatic ? 'StaticCanvas' : 'Canvas'](inkId, size)
     // 关闭点击后图层被置顶
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -32,6 +32,7 @@ export const initCanvas = (inkId: string, size: canvasType, isStatic: boolean) =
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore 设置中心缩放
     Canvas.centeredScaling = true
+
     return Canvas
 }
 

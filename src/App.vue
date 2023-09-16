@@ -21,6 +21,7 @@
                 <path d="M783.36 1003.52c30.72-30.72 30.72-76.8 0-107.52L404.48 512l378.88-378.88c30.72-30.72 30.72-76.8 0-107.52-30.72-30.72-76.8-30.72-107.52 0L240.64 455.68c-30.72 30.72-30.72 76.8 0 107.52l435.2 435.2c30.72 30.72 76.8 30.72 107.52 5.12z"></path>
             </svg>
             <div class="card-content">
+                <DrawLi ref="Draw" class="draw" :designInfo="cardInfo.designInfo" />
                 <img class="lamp1" src="./assets/img/lamp.png" alt="">
                 <img class="lamp2" src="./assets/img/lamp.png" alt="">
             </div>
@@ -28,9 +29,9 @@
                 <path d="M240.64 20.48c-30.72 30.72-30.72 81.92 0 112.64l378.88 378.88-378.88 378.88c-30.72 30.72-30.72 76.8 0 107.52s76.8 30.72 107.52 0l435.2-435.2c30.72-30.72 30.72-76.8 0-107.52L348.16 20.48c-30.72-25.6-76.8-25.6-107.52 0z"></path>
             </svg>
             <transition name="title" mode="out-in">
-                <div class="title" :key="cardList[cardIndex].key">
-                    <div>{{ cardList[cardIndex].name }}</div>
-                    <div>{{ cardList[cardIndex].desc }}</div>
+                <div class="title" :key="cardInfo.key">
+                    <div>{{ cardInfo.name }}</div>
+                    <div>{{ cardInfo.desc }}</div>
                 </div>
             </transition>
         </div>
@@ -59,6 +60,7 @@ import progress from './tools/progress'
 import { ElMessage } from 'element-plus'
 import { cardList } from './tools/cardList'
 import axios from 'axios'
+import DrawLi from './components/Draw/index.vue'
 
 /* 初始化进度条 */
 progress.start()
@@ -75,7 +77,7 @@ const userInfo = {
 let fileName = ''
 
 const cardIndex = ref(0)
-const cardInfo = ref(cardList[cardIndex.value])
+const cardInfo: any = ref(cardList[cardIndex.value])
 const loading = ref<boolean>(false)
 const Draw = ref()
 
@@ -131,7 +133,9 @@ const saveShow = ref(false)
 const shareShow = ref<boolean>(false)
 
 const createCard = async (isSave) => {
-    cardUrl.value = await Draw.value.save()
+    cardUrl.value = Draw.value.save()
+
+    console.log(cardUrl.value)
 
     if  (isSave) {
         saveShow.value = true
@@ -160,7 +164,7 @@ const createCard = async (isSave) => {
 const save = async (isSave = true) => {
     try {
         /* todo 手动保存 */
-        const name = `黎-中秋贺卡${isSave ? '' : '分享'}-${cardList[cardIndex.value].name}-${Date.now()}`
+        const name = `黎-中秋贺卡${isSave ? '' : '分享'}-${cardInfo.value.name}-${Date.now()}`
 
         downloadImg(cardUrl.value, name)
     } catch (e) {
@@ -225,16 +229,14 @@ main {
 
         .card-content {
             position: relative;
-            width: 280px;
-            height: 500px;
-            border-radius: 4px;
-            box-shadow: 2px 2px 8px 1px #f4f4f480;
+            width: 270px;
+            height: 540px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 2px 2px 8px 1px #0000001f;
 
             .draw {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                z-index: 10;
+
             }
 
             > .lamp1 {
@@ -365,8 +367,8 @@ main {
     > .rabbit2 {
         position: absolute;
         width: 60px;
-        bottom: 20px;
-        left: 20px;
+        bottom: 12px;
+        left: 12px;
         transition: all .24s;
 
         &.hidden {
@@ -375,7 +377,7 @@ main {
     }
 
     > .rabbit1 {
-        left: 74px;
+        left: 70px;
     }
 }
 

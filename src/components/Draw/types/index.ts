@@ -6,11 +6,9 @@
  * @createDate 2023-09-15 17:46
  */
 
-export interface BgInfoType {
-    url: string
-    w: number
-    h: number,
-    name: string
+export interface DesignInfo {
+    bg: string,
+    layerList: LayerType[]
 }
 
 export interface LayerType {
@@ -23,7 +21,10 @@ export interface LayerType {
     y: number,
     scale: number,
     angle: number,
-    opacity: number
+    opacity: number,
+    text: string,
+    fontColor: string,
+    fontSize: number
     [propName: string]: any
 }
 
