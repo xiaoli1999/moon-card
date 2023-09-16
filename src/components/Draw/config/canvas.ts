@@ -16,6 +16,6 @@ export interface CanvasSizeType {
  * @param { Object } canvasSize 画布尺寸 { width, height }
  */
 export const canvasSize: CanvasSizeType = {
-    width: 500,
-    height: 1000
+    width: 600,
+    height: 1080
 }

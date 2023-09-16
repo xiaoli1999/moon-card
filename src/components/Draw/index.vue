@@ -22,7 +22,7 @@ const props = defineProps({
     },
     scale: {
         type: Number,
-        default: () => 0.54
+        default: () => 0.5
     }
 })
 
@@ -153,6 +153,9 @@ defineExpose({ drawAll, save })
     position: absolute;
     top: 50% !important;
     left: 50% !important;
-    //z-index: 10;
+
+    > canvas {
+        border-radius: 20px;
+    }
 }
 </style>

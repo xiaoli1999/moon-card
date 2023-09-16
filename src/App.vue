@@ -229,11 +229,10 @@ main {
 
         .card-content {
             position: relative;
-            width: 270px;
+            width: 300px;
             height: 540px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 2px 2px 8px 1px #0000001f;
+            border-radius: 20px;
+            box-shadow: 2px 2px 8px 2px #33333360;
 
             .draw {
 
