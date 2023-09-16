@@ -1,5 +1,6 @@
 <template>
     <div class="bg">
+        <img class="wicker" src="./assets/img/wicker.png" alt="">
         <img class="moon" src="./assets/img/moon.png" alt="">
         <img class="rabbit1" src="./assets/img/rabbit1.png" alt="">
         <img class="rabbit2" src="./assets/img/rabbit2.png" alt="">
@@ -25,6 +26,10 @@
             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13223" width="64" height="64">
                 <path d="M240.64 20.48c-30.72 30.72-30.72 81.92 0 112.64l378.88 378.88-378.88 378.88c-30.72 30.72-30.72 76.8 0 107.52s76.8 30.72 107.52 0l435.2-435.2c30.72-30.72 30.72-76.8 0-107.52L348.16 20.48c-30.72-25.6-76.8-25.6-107.52 0z"></path>
             </svg>
+            <div class="title">
+                <div>{{ cardList[cardIndex].name }}</div>
+                <div>{{ cardList[cardIndex].desc }}</div>
+            </div>
         </div>
 
         <div class="stats">
@@ -42,9 +47,10 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import { judgePC, getCreatedUrl, getImgInfo, downloadImg, base64ToFile, getAuthorization, getUploadAuthorization } from '@/tools/common'
+import { judgePC, getCreatedUrl, downloadImg, base64ToFile, getAuthorization, getUploadAuthorization } from '@/tools/common'
 import progress from './tools/progress'
 import { ElMessage } from 'element-plus'
+import { cardList } from './tools/cardList'
 import axios from 'axios'
 
 /* 初始化进度条 */
@@ -62,14 +68,10 @@ const userInfo = {
 const fileName = `li-${ 1e14 - Date.now() }.png`
 
 /* 业务 */
-const styleIndex = ref(0)
-const frameIndex = ref<number | null>(null)
-const showRound = ref<boolean>(true)
-const avatarInfo = ref<any>({})
-
+const cardIndex = ref(0)
 const loading = ref<boolean>(false)
 
-const rabbitLi = ref()
+const Draw = ref()
 const uploadFile = async (e: any) => {
     if (!e.target.files || !e.target.files.length) return ElMessage.warning('上传失败！')
 
@@ -77,57 +79,18 @@ const uploadFile = async (e: any) => {
     if (!file.type.includes('image')) return ElMessage.warning('请上传正确的图片格式！')
 
     const url = getCreatedUrl(file) ?? ''
-    const imgInfo: any = await getImgInfo(url)
-    const name = file.name.split('.').splice(0, file.name.split('.').length - 1).join('.')
-    avatarInfo.value = { url, w: imgInfo.width, h: imgInfo.height, name };
+    console.log(url);
 
     (document.getElementById('uploadImg') as HTMLInputElement).value = ''
-}
-
-interface LayerType {
-    uuid: string,
-    type: string,
-    url: string,
-    w: number,
-    h: number,
-    x: number,
-    y: number,
-    scale: number,
-    angle: number,
-    opacity: number
-    [propName: string]: any
-}
-const layerList = ref<LayerType[]>([
-    {
-        uuid: 'effect',
-        type: 'img',
-        url: '',
-        w: 0,
-        h: 0,
-        x: 0,
-        y: 0,
-        scale: 0,
-        angle: 0,
-        opacity: 1
-    }
-])
-
-const selectFrame = (index: number) => {
-    if (!avatarInfo.value.url) return ElMessage.warning('请先上传原头像！')
-    frameIndex.value = index
-
-    loading.value = true
-    // layerList.value[0].url = picList[styleIndex.value].frameList[index]
 }
 
 const previewShow = ref<boolean>(false)
 const previewUrl = ref<string>('')
 const save = async (isSave) => {
-    if (!avatarInfo.value.url || !layerList.value[0].url) return ElMessage.warning('请上传原头像并选择效果图！')
 
     previewShow.value = false
-    const url = await rabbitLi.value.save()
-    if (isSave) return downloadImg(url, avatarInfo.value.name)
+    const url = await Draw.value.save()
+    if (isSave) return downloadImg(url, fileName)
 
     previewShow.value= true
     previewUrl.value= url
@@ -201,11 +164,16 @@ header {
 }
 
 main {
+    position: relative;
     max-width: 1200px;
+    min-height: 100vh;
+    margin: 0 auto;
 
     .card {
+        position: relative;
         width: 100%;
-        margin: 24px auto;
+        margin: 0 auto;
+        padding: 36px 0 24px 0;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -229,6 +197,27 @@ main {
             &:hover {
                 fill: #f4f4f4;
                 transform: scale(1.1);
+            }
+        }
+
+        .title {
+            position: absolute;
+            font-family: love, sans-serif;
+            right: 8%;
+            top: 38%;
+            display: flex;
+
+            > div {
+                width: 30px;
+                font-size: 30px;
+                line-height: 36px;
+                padding-top: 60px;
+            }
+
+            > div:first-child {
+                margin-right: 36px;
+                color: #e0a24c;
+                padding: 0;
             }
         }
     }
@@ -280,26 +269,32 @@ main {
     margin: 0 auto;
     z-index: -1;
 
-    .moon {
+    > .wicker {
+        position: absolute;
+        top: 10%;
+        left: -60px;
+    }
+
+    > .moon {
         position: absolute;
         width: 440px;
         right: -88px;
         top: -108px;
     }
 
-    .rabbit1,
-    .rabbit2 {
+    > .rabbit1,
+    > .rabbit2 {
         position: absolute;
         width: 60px;
         bottom: 20px;
         left: 20px;
     }
 
-    .rabbit1 {
+    > .rabbit1 {
         left: 74px;
     }
 
-    .lamp1 {
+    > .lamp1 {
         position: absolute;
         width: 140px;
         left: calc(50% - 220px);
@@ -307,13 +302,13 @@ main {
         animation: lamp1-path 8s linear infinite;
     }
 
-    .lamp2 {
+    > .lamp2 {
         position: absolute;
         width: 240px;
-        left: calc(50% + 10px);
-        bottom: -60px;
-        transform: rotate(-30deg);
-        animation: lamp2-path 4s linear infinite;
+        left: calc(50% - 10px);
+        top: 50%;
+        transform: rotate(-40deg);
+        animation: lamp2-path 6s infinite;
         transform-origin: top center;
     }
 
