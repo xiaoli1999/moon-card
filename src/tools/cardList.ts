@@ -27,7 +27,7 @@ export const cardList = [
     },
     {
         key: 'miss',
-        name: '寄思念',
+        name: '寄相思',
         desc: '月是故乡明',
         designInfo: {
             bg: '',

@@ -2,10 +2,8 @@
     <div class="bg">
         <img class="wicker" src="./assets/img/wicker.png" alt="">
         <img class="moon" src="./assets/img/moon.png" alt="">
-        <img class="rabbit1" src="./assets/img/rabbit1.png" alt="">
+        <img class="rabbit1" :class="cardIndex !== 2 ? '' : 'hidden'" src="./assets/img/rabbit1.png" alt="">
         <img class="rabbit2" src="./assets/img/rabbit2.png" alt="">
-        <img class="lamp1" src="./assets/img/lamp.png" alt="">
-        <img class="lamp2" src="./assets/img/lamp.png" alt="">
     </div>
 
     <header>
@@ -19,17 +17,22 @@
 
     <main>
         <div class="card">
-            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13223" width="64" height="64">
+            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" @click="changeCardTheme(false)">
                 <path d="M783.36 1003.52c30.72-30.72 30.72-76.8 0-107.52L404.48 512l378.88-378.88c30.72-30.72 30.72-76.8 0-107.52-30.72-30.72-76.8-30.72-107.52 0L240.64 455.68c-30.72 30.72-30.72 76.8 0 107.52l435.2 435.2c30.72 30.72 76.8 30.72 107.52 5.12z"></path>
             </svg>
-            <div class="card-content"></div>
-            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13223" width="64" height="64">
+            <div class="card-content">
+                <img class="lamp1" src="./assets/img/lamp.png" alt="">
+                <img class="lamp2" src="./assets/img/lamp.png" alt="">
+            </div>
+            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" @click="changeCardTheme(true)">
                 <path d="M240.64 20.48c-30.72 30.72-30.72 81.92 0 112.64l378.88 378.88-378.88 378.88c-30.72 30.72-30.72 76.8 0 107.52s76.8 30.72 107.52 0l435.2-435.2c30.72-30.72 30.72-76.8 0-107.52L348.16 20.48c-30.72-25.6-76.8-25.6-107.52 0z"></path>
             </svg>
-            <div class="title">
-                <div>{{ cardList[cardIndex].name }}</div>
-                <div>{{ cardList[cardIndex].desc }}</div>
-            </div>
+            <transition name="title" mode="out-in">
+                <div class="title" :key="cardList[cardIndex].key">
+                    <div>{{ cardList[cardIndex].name }}</div>
+                    <div>{{ cardList[cardIndex].desc }}</div>
+                </div>
+            </transition>
         </div>
 
         <div class="stats">
@@ -67,11 +70,20 @@ const userInfo = {
 }
 const fileName = `li-${ 1e14 - Date.now() }.png`
 
-/* 业务 */
 const cardIndex = ref(0)
+const cardInfo = ref(cardList[cardIndex.value])
 const loading = ref<boolean>(false)
-
 const Draw = ref()
+
+const changeCardTheme = (isAdd = true) => {
+    if (isAdd) {
+        (cardIndex.value === cardList.length - 1) ? cardIndex.value = 0 : cardIndex.value++
+    } else {
+        (cardIndex.value === 0) ? cardIndex.value = cardList.length - 1 : cardIndex.value--
+    }
+    cardInfo.value = cardList[cardIndex.value]
+}
+
 const uploadFile = async (e: any) => {
     if (!e.target.files || !e.target.files.length) return ElMessage.warning('上传失败！')
 
@@ -172,8 +184,9 @@ main {
     .card {
         position: relative;
         width: 100%;
+        height: calc(100vh - 124px);
         margin: 0 auto;
-        padding: 36px 0 24px 0;
+        padding-bottom: 12px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -184,6 +197,33 @@ main {
             height: 500px;
             border-radius: 4px;
             box-shadow: 2px 2px 8px 1px #f4f4f480;
+
+            .draw {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                z-index: 10;
+            }
+
+            > .lamp1 {
+                position: absolute;
+                width: 120px;
+                left: calc(50% - 200px);
+                top: 20%;
+                animation: lamp1-path 8s linear infinite;
+                z-index: -1;
+            }
+
+            > .lamp2 {
+                position: absolute;
+                width: 200px;
+                left: calc(50% + 10px);
+                top: 80%;
+                transform: rotate(-40deg);
+                animation: lamp2-path 6s infinite;
+                transform-origin: top center;
+                z-index: -1;
+            }
         }
 
         > svg {
@@ -192,7 +232,7 @@ main {
             fill: #dfddc6aa;
             cursor: pointer;
             transition: all .24s;
-            margin: 0 16px;
+            margin: 0 24px;
 
             &:hover {
                 fill: #f4f4f4;
@@ -203,8 +243,8 @@ main {
         .title {
             position: absolute;
             font-family: love, sans-serif;
-            right: 8%;
-            top: 38%;
+            right: 6%;
+            top: 40%;
             display: flex;
 
             > div {
@@ -218,6 +258,8 @@ main {
                 margin-right: 36px;
                 color: #e0a24c;
                 padding: 0;
+                font-size: 32px;
+                line-height: 42px;
             }
         }
     }
@@ -277,9 +319,9 @@ main {
 
     > .moon {
         position: absolute;
-        width: 440px;
-        right: -88px;
-        top: -108px;
+        width: 360px;
+        right: -80px;
+        top: -88px;
     }
 
     > .rabbit1,
@@ -288,45 +330,44 @@ main {
         width: 60px;
         bottom: 20px;
         left: 20px;
+        transition: all .24s;
+
+        &.hidden {
+            opacity: 0;
+        }
     }
 
     > .rabbit1 {
         left: 74px;
     }
+}
 
-    > .lamp1 {
-        position: absolute;
-        width: 140px;
-        left: calc(50% - 220px);
-        top: 20%;
-        animation: lamp1-path 8s linear infinite;
+@keyframes lamp1-path {
+    50% {
+        transform: translate(-40px, -8px) rotate(20deg);
     }
+}
 
-    > .lamp2 {
-        position: absolute;
-        width: 240px;
-        left: calc(50% - 10px);
-        top: 50%;
-        transform: rotate(-40deg);
-        animation: lamp2-path 6s infinite;
-        transform-origin: top center;
+@keyframes lamp2-path {
+    50% {
+        transform: rotate(-20deg);
     }
+}
 
-    @keyframes lamp1-path {
-        50% {
-            transform: translate(-40px, -8px) rotate(20deg);
-        }
-    }
+.title-enter-active,
+.title-leave-active {
+    will-change: transform;
+    transition: all .48s linear;
+}
 
-    @keyframes lamp2-path {
-        50% {
-            transform: rotate(-20deg);
-        }
-    }
+.title-enter-from {
+    opacity: 0;
+    transform: translateX(-24px);
+}
 
-    .animated-element {
-        animation-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
-    }
+.title-leave-to {
+    opacity: 0;
+    transform: translateX(24px);
 }
 
 @media only screen and (max-width: 768px) {
