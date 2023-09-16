@@ -34,6 +34,10 @@
                 </div>
             </transition>
         </div>
+        <div class="panel">
+            <el-button type="success" @click="createCard(true)">生成贺卡</el-button>
+            <el-button type="primary" @click="createCard(false)">分享给朋友</el-button>
+        </div>
 
         <div class="stats">
             <p>访问人数:<span id="busuanzi_value_site_uv"></span></p>
@@ -49,7 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import {ref, onMounted, nextTick} from 'vue'
 import { judgePC, getCreatedUrl, downloadImg, base64ToFile, getAuthorization, getUploadAuthorization } from '@/tools/common'
 import progress from './tools/progress'
 import { ElMessage } from 'element-plus'
@@ -66,9 +70,9 @@ const userInfo = {
     bucket: (import.meta as any).env.VITE_UPYUN_BUCKET,
     name: (import.meta as any).env.VITE_UPYUN_NAME,
     password: (import.meta as any).env.VITE_UPYUN_PASSWORD,
-    path: 'img/custom-avatar'
+    path: 'img/moon-card'
 }
-const fileName = `li-${ 1e14 - Date.now() }.png`
+let fileName = ''
 
 const cardIndex = ref(0)
 const cardInfo = ref(cardList[cardIndex.value])
@@ -96,45 +100,73 @@ const uploadFile = async (e: any) => {
     (document.getElementById('uploadImg') as HTMLInputElement).value = ''
 }
 
-const previewShow = ref<boolean>(false)
-const previewUrl = ref<string>('')
-const save = async (isSave) => {
-
-    previewShow.value = false
-    const url = await Draw.value.save()
-    if (isSave) return downloadImg(url, fileName)
-
-    previewShow.value= true
-    previewUrl.value= url
-
-    const uploadData = new FormData()
-
-    const file = base64ToFile(url, fileName, 'png')
-    uploadData.append('file', file)
-
-    const { policy, authorization } = getUploadAuthorization(userInfo) as any
-    uploadData.append('policy', policy)
-    uploadData.append('authorization', authorization)
-
-    console.log(url)
-
-    axios({ method: 'POST', url: `${ userInfo.url }/${ atob(userInfo.bucket) }`, data: uploadData }).catch(() => ({}))
-}
-
 const avatarList = ref([])
 const getAvatarList = async () => {
     const url = `${ userInfo.url }/${ atob(userInfo.bucket) }/${ userInfo.path }`
     const { date, authorization } = getAuthorization(userInfo)
     const headers = { authorization, 'x-date': date, Accept: 'application/json' }
-    const { files } = await axios({ method: 'GET', url, headers }).catch(() => ({})) as any
+    const { data: { files } } = await axios({ method: 'GET', url, headers }).catch(() => ({})) as any
 
     avatarList.value = files || []
+
+    /* 动态计算当前贺卡总数 */
+    let num = 1
+    if (files && files.length) {
+        const name = files[0].name.split('.png')[0]
+        const arr = name.split('-')
+        num = Number(arr[arr.length - 1] || 0)  + 1
+    }
+
+    fileName = `li-${ 1e14 - Date.now() }-${ num }.png`
 }
 
 onMounted(async () => {
     progress.close()
     await getAvatarList()
 })
+
+const cardUrl = ref('')
+const shareUrl = ref('')
+const saveShow = ref(false)
+const shareShow = ref<boolean>(false)
+
+const createCard = async (isSave) => {
+    cardUrl.value = await Draw.value.save()
+
+    if  (isSave) {
+        saveShow.value = true
+    } else {
+        await nextTick(() => {
+            /* todo 处理生成海报 */
+
+            shareUrl.value = ''
+            shareShow.value = true
+        })
+    }
+
+    /* todo 上传贺卡 */
+    const uploadData = new FormData()
+
+    const file = base64ToFile(cardUrl.value, fileName, 'png')
+    uploadData.append('file', file)
+
+    const { policy, authorization } = getUploadAuthorization(userInfo) as any
+    uploadData.append('policy', policy)
+    uploadData.append('authorization', authorization)
+
+    axios({ method: 'POST', url: `${ userInfo.url }/${ atob(userInfo.bucket) }`, data: uploadData }).catch(() => ({}))
+}
+
+const save = async (isSave = true) => {
+    try {
+        /* todo 手动保存 */
+        const name = `黎-中秋贺卡${isSave ? '' : '分享'}-${cardList[cardIndex.value].name}-${Date.now()}`
+
+        downloadImg(cardUrl.value, name)
+    } catch (e) {
+        /* 捕获错误 */
+    }
+}
 </script>
 
 <style lang="less" scoped>
@@ -243,7 +275,7 @@ main {
         .title {
             position: absolute;
             font-family: love, sans-serif;
-            right: 6%;
+            right: 7%;
             top: 40%;
             display: flex;
 
@@ -255,13 +287,18 @@ main {
             }
 
             > div:first-child {
-                margin-right: 36px;
+                margin-right: 28px;
                 color: #e0a24c;
                 padding: 0;
                 font-size: 32px;
                 line-height: 42px;
             }
         }
+    }
+
+    .panel {
+        display: flex;
+        justify-content: center;
     }
 
     .stats {
@@ -319,9 +356,9 @@ main {
 
     > .moon {
         position: absolute;
-        width: 360px;
-        right: -80px;
-        top: -88px;
+        width: 320px;
+        right: -60px;
+        top: -70px;
     }
 
     > .rabbit1,
