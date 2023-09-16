@@ -1,17 +1,43 @@
 <template>
-    <div class="bg"></div>
-    <header>中秋贺卡</header>
-
-    <div class="stats">
-        <p>本站访问人数:<span id="busuanzi_value_site_uv"></span></p>
-        <p>本站访问总量:<span id="busuanzi_value_site_pv"></span></p>
-        <a class="github" href="https://github.com/xiaoli1999/custom-rabbitImage" target="_blank">
-            <img src="./assets/img/github.png" alt="github">
-            <span>github</span>
-        </a>
+    <div class="bg">
+        <img class="moon" src="./assets/img/moon.png" alt="">
+        <img class="rabbit1" src="./assets/img/rabbit1.png" alt="">
+        <img class="rabbit2" src="./assets/img/rabbit2.png" alt="">
+        <img class="lamp1" src="./assets/img/lamp.png" alt="">
+        <img class="lamp2" src="./assets/img/lamp.png" alt="">
     </div>
-    <div class="state">部分素材来源于网络，非商业用途，如有侵权请联系删除。</div>
-    <footer>© 2023 All rights reserved. Powered by 黎</footer>
+
+    <header>
+        <div class="header-content">
+            <div>
+                <img src="https://cdn.xiaoli.vip/project/logo.jpg" alt="">
+                采黎 • 中秋贺卡
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="card">
+            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13223" width="64" height="64">
+                <path d="M783.36 1003.52c30.72-30.72 30.72-76.8 0-107.52L404.48 512l378.88-378.88c30.72-30.72 30.72-76.8 0-107.52-30.72-30.72-76.8-30.72-107.52 0L240.64 455.68c-30.72 30.72-30.72 76.8 0 107.52l435.2 435.2c30.72 30.72 76.8 30.72 107.52 5.12z"></path>
+            </svg>
+            <div class="card-content"></div>
+            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13223" width="64" height="64">
+                <path d="M240.64 20.48c-30.72 30.72-30.72 81.92 0 112.64l378.88 378.88-378.88 378.88c-30.72 30.72-30.72 76.8 0 107.52s76.8 30.72 107.52 0l435.2-435.2c30.72-30.72 30.72-76.8 0-107.52L348.16 20.48c-30.72-25.6-76.8-25.6-107.52 0z"></path>
+            </svg>
+        </div>
+
+        <div class="stats">
+            <p>访问人数:<span id="busuanzi_value_site_uv"></span></p>
+            <p>访问总量:<span id="busuanzi_value_site_pv"></span></p>
+            <a class="github" href="https://github.com/xiaoli1999/moon-card" target="_blank">
+                <img src="./assets/img/github.png" alt="github">
+                <span>github</span>
+            </a>
+        </div>
+        <div class="state">部分素材来源于网络，非商业用途，如有侵权请联系删除。</div>
+        <footer>© 2023 All rights reserved. Powered by 黎</footer>
+    </main>
 </template>
 
 <script lang="ts" setup>
@@ -20,7 +46,6 @@ import { judgePC, getCreatedUrl, getImgInfo, downloadImg, base64ToFile, getAutho
 import progress from './tools/progress'
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
-import { picList } from '@/tools/picList'
 
 /* 初始化进度条 */
 progress.start()
@@ -40,6 +65,7 @@ const fileName = `li-${ 1e14 - Date.now() }.png`
 const styleIndex = ref(0)
 const frameIndex = ref<number | null>(null)
 const showRound = ref<boolean>(true)
+const avatarInfo = ref<any>({})
 
 const loading = ref<boolean>(false)
 
@@ -91,7 +117,7 @@ const selectFrame = (index: number) => {
     frameIndex.value = index
 
     loading.value = true
-    layerList.value[0].url = picList[styleIndex.value].frameList[index]
+    // layerList.value[0].url = picList[styleIndex.value].frameList[index]
 }
 
 const previewShow = ref<boolean>(false)
@@ -137,5 +163,178 @@ onMounted(async () => {
 </script>
 
 <style lang="less" scoped>
+header {
+    position: sticky;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: 0 auto;
+    background: #dfddc630;
+    backdrop-filter: bulr(4px) saturate(50%);
+    z-index: 1000;
 
+    .header-content {
+        max-width: 1200px;
+        height: 48px;
+        padding: 0 12px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        > div {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #fff;
+            letter-spacing: 1px;
+
+            > img {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                margin-right: 8px;
+            }
+        }
+    }
+}
+
+main {
+    max-width: 1200px;
+
+    .card {
+        width: 100%;
+        margin: 24px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .card-content {
+            position: relative;
+            width: 280px;
+            height: 500px;
+            border-radius: 4px;
+            box-shadow: 2px 2px 8px 1px #f4f4f480;
+        }
+
+        > svg {
+            width: 36px;
+            height: 36px;
+            fill: #dfddc6aa;
+            cursor: pointer;
+            transition: all .24s;
+            margin: 0 16px;
+
+            &:hover {
+                fill: #f4f4f4;
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    .stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 8px auto;
+
+        > p,
+        > a {
+            padding: 6px 8px;
+            margin: 0 6px 0 0;
+            font-size: 12px;
+            border-radius: 2px;
+            background: #dfddc680;
+            display: flex;
+            align-items: center;
+
+            > span {
+                padding-left: 4px;
+            }
+
+            > img {
+                width: 14px;
+                height: 14px;
+                margin-right: 4px;
+            }
+        }
+    }
+
+    footer,
+    .state {
+        line-height: 20px;
+        font-size: 12px;
+        text-align: center;
+    }
+}
+
+.bg {
+    width: 100%;
+    max-width: 1200px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    z-index: -1;
+
+    .moon {
+        position: absolute;
+        width: 440px;
+        right: -88px;
+        top: -108px;
+    }
+
+    .rabbit1,
+    .rabbit2 {
+        position: absolute;
+        width: 60px;
+        bottom: 20px;
+        left: 20px;
+    }
+
+    .rabbit1 {
+        left: 74px;
+    }
+
+    .lamp1 {
+        position: absolute;
+        width: 140px;
+        left: calc(50% - 220px);
+        top: 20%;
+        animation: lamp1-path 8s linear infinite;
+    }
+
+    .lamp2 {
+        position: absolute;
+        width: 240px;
+        left: calc(50% + 10px);
+        bottom: -60px;
+        transform: rotate(-30deg);
+        animation: lamp2-path 4s linear infinite;
+        transform-origin: top center;
+    }
+
+    @keyframes lamp1-path {
+        50% {
+            transform: translate(-40px, -8px) rotate(20deg);
+        }
+    }
+
+    @keyframes lamp2-path {
+        50% {
+            transform: rotate(-20deg);
+        }
+    }
+
+    .animated-element {
+        animation-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+    }
+}
+
+@media only screen and (max-width: 768px) {
+
+}
 </style>
