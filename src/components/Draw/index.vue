@@ -1,6 +1,7 @@
 <template>
     <div class="draw" :style="{ transform: `translate(-50%, -50%) scale(${ scale })` }">
         <canvas :id="CanvasId" />
+        <canvas id="circleCanvas" style="display: none" />
         <input id="uploadImg" type="file" accept="image/*" />
     </div>
 </template>

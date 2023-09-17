@@ -18,7 +18,7 @@ export const cardList = [
                 {
                     name: 'avatar',
                     type: 'img',
-                    url: 'https://cdn.xiaoli.vip/project/logo.jpg',
+                    url: 'https://cdn.xiaoli.vip/project/moon-card/avatar-1.png',
                     w: 100,
                     left: 94,
                     top: 990,

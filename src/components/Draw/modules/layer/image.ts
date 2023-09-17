@@ -22,20 +22,10 @@ export const drawImgLayer = (Canvas: any, layer: LayerType) => {
     return new Promise(async (resolve: any) => {
 
         const { name, url, left, top, w, angle  } = layer
-        /* 绘制圆形图片 */
-        if (!url) return resolve()
+
         const imgLayer: any = await drawImg(url)
-
-        imgLayer.set({
-            left,
-            top,
-            angle,
-            clipPath: new fabric.Circle({
-                radius: Math.min(imgLayer.height, imgLayer.width) / 2
-            })
-        })
-
-        imgLayer.width > imgLayer.height ? imgLayer.scaleToHeight(w, true) : imgLayer.scaleToWidth(w, true)
+        imgLayer.set({ left, top, angle })
+        imgLayer.scaleToWidth(w, true)
         imgLayer.name = name
         addOrReplaceLayer(Canvas, imgLayer)
 
@@ -68,25 +58,21 @@ export const drawImgLayer = (Canvas: any, layer: LayerType) => {
 
         /* 图片上传逻辑 */
         uploadImgDom.addEventListener('change',  async (e) => {
-            const url = uploadImg(e) as string
+            const url = await uploadImg(e) as string
             uploadImgDom.value =  ''
 
-            const imgLayerShort = Math.min(imgLayer.getScaledWidth(), imgLayer.getScaledHeight())
-            console.log('5616165', imgLayer.getScaledWidth())
+            const imgLayerWidth = imgLayer.getScaledWidth()
 
             /* 更新图片源 */
-            imgLayer.setSrc(url,  (newImgLayer) => {
+            imgLayer.setSrc(url, (newImgLayer) => {
                 // 图片加载后的回调函数
-                const ratio = imgLayerShort / (newImgLayer.width > newImgLayer.height ? newImgLayer.height : newImgLayer.width)
+                const ratio = imgLayerWidth / newImgLayer.width
                 newImgLayer.set({
                     left: imgLayer.left,
                     top: imgLayer.top,
                     angle: imgLayer.angle,
                     scaleX: ratio,
-                    scaleY: ratio,
-                    clipPath: new fabric.Circle({
-                        radius: Math.min(newImgLayer.width, newImgLayer.height)  / 2
-                    })
+                    scaleY: ratio
                 })
 
                 // 刷新 Canvas 以显示更新后的图片元素
@@ -99,13 +85,46 @@ export const drawImgLayer = (Canvas: any, layer: LayerType) => {
     })
 }
 
-const uploadImg = (e) => {
-    if (!e.target.files || !e.target.files.length) return ElMessage.warning('上传失败！')
+const uploadImg = async (e) => {
+    return new Promise((resolve, reject) => {
+        if (!e.target.files || !e.target.files.length) return ElMessage.warning('上传失败！')
 
-    const file = e.target.files[0]
-    if (!file.type.includes('image')) return ElMessage.warning('请上传正确的图片格式！')
+        const file = e.target.files[0]
+        if (!file.type.includes('image')) return ElMessage.warning('请上传正确的图片格式！')
 
-    return getCreatedUrl(file) ?? ''
+        const canvas: any = document.getElementById('circleCanvas')
+        const ctx = canvas.getContext('2d')
+        const imgUrl = getCreatedUrl(file) ?? ''
+
+        const image = new Image()
+        image.src = imgUrl
+
+        image.onload = () => {
+            const diameter = Math.min(image.width, image.height) // 获取最短边作为直径
+            canvas.width = diameter
+            canvas.height = diameter
+
+            const centerX = diameter / 2
+            const centerY = diameter / 2
+
+            // 创建一个圆形路径
+            ctx.beginPath()
+            ctx.arc(centerX, centerY, diameter / 2, 0, Math.PI * 2, false)
+            ctx.closePath()
+            ctx.clip()
+
+            // 计算图片的偏移，使其居中
+            const offsetX = (image.width - diameter) / 2
+            const offsetY = (image.height - diameter) / 2
+
+            // 将图片绘制到圆形区域内，不变形
+            ctx.drawImage(image, offsetX, offsetY, diameter, diameter, 0, 0, diameter, diameter)
+
+            return resolve(canvas.toDataURL('image/png'))
+        }
+
+        image.onerror = () => reject('')
+    })
 }
 
 
