@@ -20,12 +20,12 @@
  */
 export const controlMobile: any = {
     transparentCorners: false,
-    cornerStrokeColor: '#00BFFF',
-    cornerColor: '#00BFFF',
-    cornerStyle: 'rect',
-    cornerSize: 10,
+    cornerStrokeColor: '#fff',
+    cornerColor: '#fff',
+    cornerStyle: 'circle',
+    cornerSize: 20,
     borderScaleFactor: 2,
-    borderColor: '#00BFFF',
+    borderColor: '#f2f4fa',
     padding: 8,
     mtrOffsetY: -40
 }
