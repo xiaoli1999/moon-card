@@ -8,6 +8,7 @@
 
 import { drawImgLayer } from './image'
 import { LayerType } from '../../types'
+import { drawTextLayer } from '@c/Draw/modules/layer/text'
 
 /**
  * @function drawLayer 绘制图层
@@ -18,5 +19,7 @@ export const drawLayer = (Canvas: any, layer: LayerType) => {
     if (layer.type === 'img') {
         // 绘制图片层
         return drawImgLayer(Canvas, layer)
+    } else if (layer.type === 'text') {
+        return drawTextLayer(Canvas, layer)
     }
 }

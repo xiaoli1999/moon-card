@@ -20,7 +20,7 @@ import { fixedLayerName } from '../config/name'
  * @param { Boolean } isStatic 是否静态画布
  * @return { Object } Canvas 返回画布实例对象
  */
-export const initCanvas = (inkId: string, size: CanvasSizeType, isStatic= true) => {
+export const initCanvas = (inkId: string, size: CanvasSizeType, isStatic= false) => {
     const Canvas: Canvas | StaticCanvas = new fabric[isStatic ? 'StaticCanvas' : 'Canvas'](inkId, size)
     // 关闭点击后图层被置顶
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

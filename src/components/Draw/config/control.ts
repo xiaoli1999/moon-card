@@ -23,7 +23,7 @@ export const controlMobile: any = {
     cornerStrokeColor: '#fff',
     cornerColor: '#fff',
     cornerStyle: 'circle',
-    cornerSize: 20,
+    cornerSize: 24,
     borderScaleFactor: 2,
     borderColor: '#f2f4fa',
     padding: 8,

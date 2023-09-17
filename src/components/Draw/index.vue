@@ -1,6 +1,7 @@
 <template>
     <div class="draw" :style="{ transform: `translate(-50%, -50%) scale(${ scale })` }">
         <canvas :id="CanvasId" />
+        <input id="uploadImg" type="file" accept="image/*" />
     </div>
 </template>
 <script setup lang="ts">
@@ -40,6 +41,10 @@ let Canvas: any
  */
 const Loading = ref<boolean>(false)
 
+/* 设置中心点 */
+fabric.Object.prototype.originX = 'center'
+fabric.Object.prototype.originY = 'center'
+
 /* 字父通信 */
 const emit = defineEmits(['drawComplete', 'updateLayer'])
 
@@ -53,10 +58,15 @@ const initFabricControl = () => {
 }
 
 const init = async () => {
-    if (Canvas) Canvas.clear()
+    if (Canvas) {
+        Canvas.clear()
+    } else {
+        /* 初始化画布 */
+        Canvas = initCanvas(CanvasId.value, canvasSize)
+    }
 
-    /* 初始化画布 */
-    Canvas = initCanvas(CanvasId.value, canvasSize)
+    /* 初始化字体缓存 */
+    if (!('fontObj' in globalThis)) globalThis.fontObj = {}
 
     /* 绘制背景 */
     await drawBackground(Canvas, props.designInfo)
@@ -140,7 +150,6 @@ const save = ():string => {
         height: Canvas.height
     })
 }
-
 /* 设计数据改变时触发重绘 */
 watch(() => props.designInfo, async () => (await init()))
 
@@ -157,5 +166,11 @@ defineExpose({ drawAll, save })
     > canvas {
         border-radius: 20px;
     }
+}
+
+#uploadImg {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
 }
 </style>

@@ -12,7 +12,7 @@ export interface DesignInfo {
 }
 
 export interface LayerType {
-    uuid: string,
+    name: string,
     type: string,
     url: string,
     w: number,

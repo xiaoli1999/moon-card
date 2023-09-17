@@ -215,6 +215,7 @@ main {
     position: relative;
     max-width: 1200px;
     min-height: 100vh;
+    overflow: hidden;
     margin: 0 auto;
 
     .card {
@@ -222,7 +223,6 @@ main {
         width: 100%;
         height: calc(100vh - 124px);
         margin: 0 auto;
-        padding-bottom: 12px;
         display: flex;
         justify-content: center;
         align-items: center;

@@ -6,6 +6,7 @@
  * @createDate 2023-09-16 22:48
  */
 
+// 月光如水，思念如丝
 export const cardList = [
     {
         key: 'wish',
@@ -13,7 +14,47 @@ export const cardList = [
         desc: '千里共赏明月夜',
         designInfo: {
             bg: 'https://cdn.xiaoli.vip/project/moon-card/bg-1.png',
-            layerList: []
+            layerList: [
+                {
+                    name: 'avatar',
+                    type: 'img',
+                    url: 'https://cdn.xiaoli.vip/project/logo.jpg',
+                    w: 100,
+                    left: 94,
+                    top: 990,
+                    angle: 0,
+                    opacity: 1,
+                    text: '',
+                    fontColor: '#fff',
+                    fontSize: 20
+                },
+                {
+                    name: 'text1',
+                    type: 'text',
+                    url: 'https://cdn.xiaoli.vip/project/moon-card/kt.ttf',
+                    w: 0,
+                    left: 260,
+                    top: 970,
+                    angle: 0,
+                    opacity: 1,
+                    text: '采黎祝大家',
+                    fontColor: '#fff',
+                    fontSize: 40
+                },
+                {
+                    name: 'text2',
+                    type: 'text',
+                    url: 'https://cdn.xiaoli.vip/project/moon-card/kt.ttf',
+                    w: 0,
+                    left: 360,
+                    top: 1022,
+                    angle: 0,
+                    opacity: 1,
+                    text: '花好月圆，幸福安康！',
+                    fontColor: '#fff',
+                    fontSize: 40
+                }
+            ]
         }
     },
     {

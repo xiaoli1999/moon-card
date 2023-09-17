@@ -8,7 +8,6 @@
 
 import { fabric } from 'fabric'
 import { addOrReplaceLayer } from '../common'
-// import { borderControl } from '@views/printTemplate/components/Draw/config/control';
 
 /**
  * @function drawTextLayer 绘制文本图层
@@ -19,61 +18,36 @@ import { addOrReplaceLayer } from '../common'
 export const drawTextLayer = (Canvas: any, layer: any) => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve: any) => {
-        const { uuid, design: { w, x, y, scaleX, scaleY }, text, textAlign, fontFamily, fontSize, fontColor, fontWeight, fontStyle, underline } = layer
+        const { name, left, top, text, url, fontSize, fontColor } = layer
 
-        const charSpacing = 100
-        const textInfo = new fabric.IText(text, { fontSize, fontFamily, fontWeight, fontStyle, charSpacing })
+        /* 注册字体 */
+        if (!globalThis.fontObj[url]) {
+            const font = new window.FontFace(url, `url(${url})`)
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            document.fonts.add(font)
+            const res = await font.load()
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            if (res && res.status === 'loaded') globalThis.fontObj[url] = url
+        }
 
-        const width = w || Math.ceil(textInfo.width as number)
 
         const textStyle = {
-            width,
-            left: x,
-            top: y,
+            left,
+            top,
             fontSize,
-            fontFamily,
+            fontFamily: url,
             fill: fontColor,
-            fontStyle,
-            fontWeight,
-            textAlign,
-            scaleX,
-            scaleY,
-            underline,
             lineHeight: 1,
-            charSpacing,
-            // splitByGrapheme: true,
-            editable: false
+            cursorColor: fontColor,
+            editingBorderColo: '#fff'
         }
         const textSprite = new fabric.Textbox(text, textStyle)
-        textSprite.name = uuid
+        textSprite.name = name
         // 暂时禁用缩放调整大小
-        textSprite.setControlsVisibility({ tl: false, tr: false, bl: false, br: false, ml: false, mt: false, mb: false })
+        textSprite.setControlsVisibility({  ml: false, mr: false, mt: false, mb: false })
 
-        const borderSprite = new fabric.Rect({
-            left: x,
-            top: y,
-            width: textSprite.width,
-            height: textSprite.height,
-            fill: 'transparent',
-            stroke: '#00BFFF',
-            strokeWidth: 1,
-            selectable: false,
-            evented: false
-        });
-
-        borderSprite.name = 'borderSprite' + uuid
-        textSprite.on('mouseup', (e: any) => {
-            const { target } = e || {}
-            borderSprite.set({
-                left: target.left,
-                top: target.top,
-                width: target.width,
-                height: target.height
-            })
-            Canvas.renderAll()
-        })
-
-        addOrReplaceLayer(Canvas, borderSprite)
         addOrReplaceLayer(Canvas, textSprite)
 
         return resolve(textSprite)
