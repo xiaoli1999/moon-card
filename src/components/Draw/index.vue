@@ -164,7 +164,7 @@ defineExpose({ drawAll, save })
     top: 50% !important;
     left: 50% !important;
 
-    > canvas {
+    canvas {
         border-radius: 20px;
     }
 }
