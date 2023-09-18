@@ -42,9 +42,18 @@
                 </div>
             </transition>
         </div>
+
         <div class="panel">
             <el-button type="success" @click="createCard(true)" :disabled="loading">生成贺卡</el-button>
             <el-button type="primary" @click="createCard(false)" :disabled="loading">分享给朋友</el-button>
+        </div>
+
+        <div class="card-title">中秋贺卡集</div>
+        <div class="card-list">
+            <el-image v-for="url in avatarPageUrlList" :key="url" :src="url" :preview-src-list="avatarPageUrlList" />
+        </div>
+        <div v-if="pageNo * pageSize < avatarList.length" class="card-more">
+            <el-button type="info" link @click="loadMore">查看更多</el-button>
         </div>
 
         <div class="stats">
@@ -90,7 +99,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, nextTick } from 'vue'
-import { judgePC, downloadImg, base64ToFile, getAuthorization, getUploadAuthorization } from '@/tools/common'
+import { downloadImg, base64ToFile, getAuthorization, getUploadAuthorization } from '@/tools/common'
 import progress from './tools/progress'
 import { ElMessage } from 'element-plus'
 import { cardList } from './tools/cardList'
@@ -102,8 +111,6 @@ import html2canvas from 'html2canvas'
 progress.start()
 
 /* 基础数据 */
-const isPc = ref<boolean>(judgePC())
-console.log(isPc)
 const userInfo = {
     url: 'https://v0.api.upyun.com',
     bucket: (import.meta as any).env.VITE_UPYUN_BUCKET,
@@ -116,7 +123,6 @@ let fileName = ''
 const cardIndex = ref(0)
 const cardInfo: any = ref(cardList[cardIndex.value])
 const loading = ref<boolean>(false)
-console.log(loading)
 const Draw = ref()
 
 const changeCardTheme = (isAdd = true) => {
@@ -128,14 +134,17 @@ const changeCardTheme = (isAdd = true) => {
     cardInfo.value = cardList[cardIndex.value]
 }
 
-const avatarList = ref([])
+const avatarList = ref<any[]>([])
+const avatarPageUrlList = ref<string[]>([])
 const getAvatarList = async () => {
     const url = `${ userInfo.url }/${ atob(userInfo.bucket) }/${ userInfo.path }`
     const { date, authorization } = getAuthorization(userInfo)
     const headers = { authorization, 'x-date': date, Accept: 'application/json' }
     const { data: { files } } = await axios({ method: 'GET', url, headers }).catch(() => ({})) as any
 
-    avatarList.value = files || []
+    avatarList.value = (files || []).map(i => ({ ...i, url: `https://cdn.xiaoli.vip/img/moon-card/${ i.name }` }))
+
+    loadMore()
 
     /* 动态计算当前贺卡总数 */
     let num = 1
@@ -146,6 +155,14 @@ const getAvatarList = async () => {
     }
 
     fileName = `li-${ 1e14 - Date.now() }-${ num }.png`
+}
+
+const pageNo = ref(0)
+const pageSize = ref(12)
+const loadMore = () => {
+    const arr = avatarList.value.slice(pageNo.value * pageSize.value, ((pageNo.value + 1) * pageSize.value)).map(i => i.url)
+    avatarPageUrlList.value = [...avatarPageUrlList.value, ...arr]
+    pageNo.value++
 }
 
 onMounted(async () => {
@@ -332,6 +349,33 @@ main {
     .panel {
         display: flex;
         justify-content: center;
+    }
+
+    .card-title {
+        font-size: 24px;
+        font-weight: 600;
+        font-family: love, sans-serif;
+        text-align: center;
+        letter-spacing: 1px;
+        margin: 16px auto;
+    }
+
+    .card-list {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-wrap: wrap;
+
+        > div {
+            display: block;
+            width: calc(25% - 16px);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+    }
+
+    .card-more {
+        text-align: center;
     }
 
     .stats {
@@ -574,6 +618,27 @@ main {
             display: flex;
             justify-content: center;
             margin: 16px auto;
+        }
+
+        .card-title {
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .card-list {
+            padding: 0 20px;
+            justify-content: space-between;
+
+            > div {
+                display: block;
+                width: calc(50% - 8px);
+                border-radius: 8px;
+                margin-bottom: 16px;
+            }
+        }
+
+        .card-more {
+            text-align: center;
         }
 
         .stats {
