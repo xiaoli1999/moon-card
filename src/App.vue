@@ -368,7 +368,7 @@ main {
 
         > div {
             display: block;
-            width: calc(25% - 16px);
+            width: calc(25% - 20px);
             border-radius: 8px;
             margin-bottom: 16px;
         }

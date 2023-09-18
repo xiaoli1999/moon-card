@@ -31,7 +31,7 @@ export const drawImgLayer = (Canvas: any, layer: LayerType) => {
 
         /* 绘制自定义上传控件 */
         const uploadLayer: any = await drawImg(new URL('../../icons/upload-img.png', import.meta.url).href)
-        uploadLayer.scaleToHeight(30, true)
+        uploadLayer.scaleToHeight(40, true)
 
         const uploadImgDom = document.getElementById('uploadImg') as HTMLInputElement
 
