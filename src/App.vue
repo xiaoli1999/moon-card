@@ -36,8 +36,8 @@
             </transition>
         </div>
         <div class="panel">
-            <el-button type="success" @click="createCard(true)">生成贺卡</el-button>
-            <el-button type="primary" @click="createCard(false)">分享给朋友</el-button>
+            <el-button type="success" @click="createCard(true)" :disabled="loading">生成贺卡</el-button>
+            <el-button type="primary" @click="createCard(false)" :disabled="loading">分享给朋友</el-button>
         </div>
 
         <div class="stats">
@@ -52,6 +52,16 @@
         <footer>© 2023 All rights reserved. Powered by 黎</footer>
     </main>
 
+    <!-- 生成海报 -->
+    <div id="poster" class="poster">
+        <img class="poster-img" :src="cardUrl" alt="">
+        <div class="poster-desc">
+            <span>长按识别右侧二维码，制作中秋贺卡！</span>
+            <img src="https://cdn.xiaoli.vip/project/moon-card/code.png" alt="">
+        </div>
+    </div>
+
+
     <el-dialog class="notice" v-model="saveShow" title="保存贺卡" width="340px" align-center center style="border-radius: 8px;">
         <div class="notice-content">
             <img :src="cardUrl" alt="">
@@ -63,7 +73,7 @@
 
     <el-dialog class="notice" v-model="shareShow" title="分享贺卡" width="340px" align-center center style="border-radius: 8px;">
         <div class="notice-content">
-            <img :src="cardUrl" alt="">
+            <img :src="shareUrl" alt="">
             <div>
                 <el-button type="primary" @click="save(false)">分享(或长按图片分享)</el-button>
             </div>
@@ -73,18 +83,20 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, nextTick } from 'vue'
-import { judgePC, getCreatedUrl, downloadImg, base64ToFile, getAuthorization, getUploadAuthorization } from '@/tools/common'
+import { judgePC, downloadImg, base64ToFile, getAuthorization, getUploadAuthorization } from '@/tools/common'
 import progress from './tools/progress'
 import { ElMessage } from 'element-plus'
 import { cardList } from './tools/cardList'
 import axios from 'axios'
 import DrawLi from './components/Draw/index.vue'
+import html2canvas from 'html2canvas'
 
 /* 初始化进度条 */
 progress.start()
 
 /* 基础数据 */
 const isPc = ref<boolean>(judgePC())
+console.log(isPc)
 const userInfo = {
     url: 'https://v0.api.upyun.com',
     bucket: (import.meta as any).env.VITE_UPYUN_BUCKET,
@@ -97,6 +109,7 @@ let fileName = ''
 const cardIndex = ref(0)
 const cardInfo: any = ref(cardList[cardIndex.value])
 const loading = ref<boolean>(false)
+console.log(loading)
 const Draw = ref()
 
 const changeCardTheme = (isAdd = true) => {
@@ -106,18 +119,6 @@ const changeCardTheme = (isAdd = true) => {
         (cardIndex.value === 0) ? cardIndex.value = cardList.length - 1 : cardIndex.value--
     }
     cardInfo.value = cardList[cardIndex.value]
-}
-
-const uploadFile = async (e: any) => {
-    if (!e.target.files || !e.target.files.length) return ElMessage.warning('上传失败！')
-
-    const file = e.target.files[0]
-    if (!file.type.includes('image')) return ElMessage.warning('请上传正确的图片格式！')
-
-    const url = getCreatedUrl(file) ?? ''
-    console.log(url);
-
-    (document.getElementById('uploadImg') as HTMLInputElement).value = ''
 }
 
 const avatarList = ref([])
@@ -151,21 +152,27 @@ const saveShow = ref(false)
 const shareShow = ref<boolean>(false)
 
 const createCard = async (isSave) => {
-    const url = Draw.value.save()
-    cardUrl.value = url
+    loading.value = true
+    isSave ? saveShow.value = true : shareShow.value = true
+    cardUrl.value = Draw.value.save()
 
     if  (isSave) {
         saveShow.value = true
+        loading.value = false
     } else {
         await nextTick(() => {
-            /* todo 处理生成海报 */
-
-            shareUrl.value = ''
-            shareShow.value = true
+            /* 生成海报 */
+            const posterDom = document.getElementById('poster') as HTMLElement
+            html2canvas(posterDom, { useCORS: true }).then((canvas) => {
+                shareUrl.value = canvas.toDataURL('image/png')
+                console.timeEnd('sss')
+                shareShow.value = true
+                loading.value = false
+            })
         })
     }
 
-    /* todo 上传贺卡 */
+    /* 上传贺卡 */
     const uploadData = new FormData()
 
     const file = base64ToFile(cardUrl.value, fileName, 'png')
@@ -180,11 +187,9 @@ const createCard = async (isSave) => {
 
 const save = async (isSave = true) => {
     try {
-        /* todo 手动保存 */
+        /* 手动保存 */
         const name = `黎-中秋贺卡${isSave ? '' : '分享'}-${cardInfo.value.name}-${Date.now()}`
-
         downloadImg(cardUrl.value, name)
-
         ElMessage.success(isSave ? '保存成功' : '保存成功，快去分享给亲友吧~')
     } catch (e) {
         /* 捕获错误 */
@@ -448,6 +453,37 @@ main {
             > span {
                 padding-left: 8px;
             }
+        }
+    }
+}
+
+.poster {
+    width: 600px;
+    height: 1180px;
+    position: absolute;
+    top: -150%;
+    left: -150%;
+
+    .poster-img {
+        width: 600px;
+        height: 1080px;
+    }
+
+    .poster-desc {
+        padding: 0 20px;
+        height: 100px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fff;
+        font-size: 24px;
+        color: #363636;
+        font-weight: 600;
+        letter-spacing: 1px;
+
+        > img {
+            width: 80px;
+            height: 80px;
         }
     }
 }

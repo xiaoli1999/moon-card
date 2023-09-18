@@ -141,7 +141,7 @@ const drawComplete = () => emit('drawComplete')
  * @function save 保存作品图及效果图
  * @return { String } result base64 保存/预览时返回
  */
-const save = ():string => {
+const save = ():  string => {
     console.log(Canvas)
     return Canvas.toDataURL({
         format: 'png',
