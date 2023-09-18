@@ -19,7 +19,7 @@ export const cardList = [
                     name: 'avatar',
                     type: 'img',
                     url: 'https://cdn.xiaoli.vip/project/moon-card/avatar-1.png',
-                    w: 100,
+                    w: 120,
                     left: 94,
                     top: 990,
                     angle: 0,
@@ -33,13 +33,14 @@ export const cardList = [
                     type: 'text',
                     url: 'https://cdn.xiaoli.vip/project/moon-card/kt.ttf',
                     w: 0,
-                    left: 260,
-                    top: 970,
+                    left: 268,
+                    top: 964,
                     angle: 0,
                     opacity: 1,
-                    text: '采黎祝大家',
+                    text: '小黎祝大家',
                     fontColor: '#fff',
-                    fontSize: 40
+                    fontWeight: '',
+                    fontSize: 42
                 },
                 {
                     name: 'text2',
@@ -50,9 +51,10 @@ export const cardList = [
                     top: 1022,
                     angle: 0,
                     opacity: 1,
-                    text: '花好月圆，幸福安康！',
+                    text: '月光所至，万事胜意.',
                     fontColor: '#fff',
-                    fontSize: 40
+                    fontWeight: '',
+                    fontSize: 42
                 }
             ]
         }
@@ -62,8 +64,50 @@ export const cardList = [
         name: '庆团圆',
         desc: '月下共庆团圆夜',
         designInfo: {
-            bg: '',
-            layerList: []
+            bg: 'https://cdn.xiaoli.vip/project/moon-card/bg-2.png',
+            layerList: [
+                {
+                    name: 'avatar',
+                    type: 'img',
+                    url: 'https://cdn.xiaoli.vip/project/moon-card/avatar-2.png',
+                    w: 140,
+                    left: 510,
+                    top: 988,
+                    angle: 0,
+                    opacity: 1,
+                    text: '',
+                    fontColor: '#fff',
+                    fontSize: 20
+                },
+                {
+                    name: 'text1',
+                    type: 'vText',
+                    url: 'https://cdn.xiaoli.vip/project/moon-card/AT.ttf',
+                    w: 0,
+                    left: 460,
+                    top: 690,
+                    angle: 0,
+                    opacity: 1,
+                    text: '家人闲坐',
+                    fontColor: '#fff',
+                    fontWeight: '900',
+                    fontSize: 54
+                },
+                {
+                    name: 'text2',
+                    type: 'vText',
+                    url: 'https://cdn.xiaoli.vip/project/moon-card/AT.ttf',
+                    w: 0,
+                    left: 530,
+                    top: 780,
+                    angle: 0,
+                    opacity: 1,
+                    text: '灯火可亲',
+                    fontColor: '#fff',
+                    fontWeight: '900',
+                    fontSize: 54
+                }
+            ]
         }
     },
     {
@@ -71,8 +115,50 @@ export const cardList = [
         name: '寄相思',
         desc: '月是故乡明',
         designInfo: {
-            bg: '',
-            layerList: []
+            bg: 'https://cdn.xiaoli.vip/project/moon-card/bg-3.png',
+            layerList: [
+                {
+                    name: 'avatar',
+                    type: 'img',
+                    url: 'https://cdn.xiaoli.vip/project/moon-card/avatar-1.png',
+                    w: 120,
+                    left: 300,
+                    top: 820,
+                    angle: 0,
+                    opacity: 1,
+                    text: '',
+                    fontColor: '#fff',
+                    fontSize: 20
+                },
+                {
+                    name: 'text1',
+                    type: 'text',
+                    url: 'https://cdn.xiaoli.vip/project/moon-card/AT.ttf',
+                    w: 0,
+                    left: 200,
+                    top: 970,
+                    angle: 0,
+                    opacity: 1,
+                    text: '露从今夜白，',
+                    fontColor: '#fff',
+                    fontWeight: '900',
+                    fontSize: 44
+                },
+                {
+                    name: 'text2',
+                    type: 'text',
+                    url: 'https://cdn.xiaoli.vip/project/moon-card/AT.ttf',
+                    w: 0,
+                    left: 380,
+                    top: 1022,
+                    angle: 0,
+                    opacity: 1,
+                    text: '月是故乡明~',
+                    fontColor: '#fff',
+                    fontWeight: '900',
+                    fontSize: 44
+                }
+            ]
         }
     }
 ]

@@ -18,10 +18,10 @@ import { addOrReplaceLayer } from '../common'
 export const drawTextLayer = (Canvas: any, layer: any) => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve: any) => {
-        const { name, left, top, text, url, fontSize, fontColor } = layer
+        const { name, left, top, text, url, fontSize, fontColor, fontWeight } = layer
 
         /* 注册字体 */
-        if (!globalThis.fontObj[url]) {
+        if (url && !globalThis.fontObj[url]) {
             const font = new window.FontFace(url, `url(${url})`)
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -37,6 +37,7 @@ export const drawTextLayer = (Canvas: any, layer: any) => {
             left,
             top,
             fontSize,
+            fontWeight,
             fontFamily: url,
             fill: fontColor,
             lineHeight: 1,
