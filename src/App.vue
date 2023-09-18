@@ -16,6 +16,13 @@
     </header>
 
     <main>
+        <transition name="title" mode="out-in">
+            <div class="title-mobile" :key="cardInfo.key">
+                <div>{{ cardInfo.name }}</div>
+                <div>{{ cardInfo.desc }}</div>
+            </div>
+        </transition>
+
         <div class="card">
             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" @click="changeCardTheme(false)">
                 <path d="M783.36 1003.52c30.72-30.72 30.72-76.8 0-107.52L404.48 512l378.88-378.88c30.72-30.72 30.72-76.8 0-107.52-30.72-30.72-76.8-30.72-107.52 0L240.64 455.68c-30.72 30.72-30.72 76.8 0 107.52l435.2 435.2c30.72 30.72 76.8 30.72 107.52 5.12z"></path>
@@ -29,7 +36,7 @@
                 <path d="M240.64 20.48c-30.72 30.72-30.72 81.92 0 112.64l378.88 378.88-378.88 378.88c-30.72 30.72-30.72 76.8 0 107.52s76.8 30.72 107.52 0l435.2-435.2c30.72-30.72 30.72-76.8 0-107.52L348.16 20.48c-30.72-25.6-76.8-25.6-107.52 0z"></path>
             </svg>
             <transition name="title" mode="out-in">
-                <div class="title" :key="cardInfo.key">
+                <div class="title-pc" :key="cardInfo.key">
                     <div>{{ cardInfo.name }}</div>
                     <div>{{ cardInfo.desc }}</div>
                 </div>
@@ -75,7 +82,7 @@
         <div class="notice-content">
             <img :src="shareUrl" alt="">
             <div>
-                <el-button type="primary" @click="save(false)">分享(或长按图片分享)</el-button>
+                <el-button type="primary" @click="save(false)">分享(或长按图片转发给朋友)</el-button>
             </div>
         </div>
     </el-dialog>
@@ -243,6 +250,33 @@ main {
     overflow: hidden;
     margin: 0 auto;
 
+    .title-mobile {
+        display: none;
+    }
+
+    .title-pc {
+        position: absolute;
+        font-family: love, sans-serif;
+        right: 7%;
+        top: 40%;
+        display: flex;
+
+        > div {
+            width: 30px;
+            font-size: 30px;
+            line-height: 36px;
+            padding-top: 60px;
+        }
+
+        > div:first-child {
+            margin-right: 28px;
+            color: #e0a24c;
+            padding: 0;
+            font-size: 32px;
+            line-height: 42px;
+        }
+    }
+
     .card {
         position: relative;
         width: 100%;
@@ -257,11 +291,7 @@ main {
             width: 300px;
             height: 540px;
             border-radius: 20px;
-            box-shadow: 2px 2px 8px 2px #33333360;
-
-            .draw {
-
-            }
+            box-shadow: 2px 2px 10px 2px #333333cc;
 
             > .lamp1 {
                 position: absolute;
@@ -297,29 +327,6 @@ main {
                 transform: scale(1.1);
             }
         }
-
-        .title {
-            position: absolute;
-            font-family: love, sans-serif;
-            right: 7%;
-            top: 40%;
-            display: flex;
-
-            > div {
-                width: 30px;
-                font-size: 30px;
-                line-height: 36px;
-                padding-top: 60px;
-            }
-
-            > div:first-child {
-                margin-right: 28px;
-                color: #e0a24c;
-                padding: 0;
-                font-size: 32px;
-                line-height: 42px;
-            }
-        }
     }
 
     .panel {
@@ -331,14 +338,15 @@ main {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 8px auto;
+        margin: 16px auto;
 
         > p,
         > a {
-            padding: 6px 8px;
-            margin: 0 6px 0 0;
+            height: 24px;
+            padding: 0 8px;
+            margin: 0 8px 0 0;
             font-size: 12px;
-            border-radius: 2px;
+            border-radius: 4px;
             background: #dfddc680;
             display: flex;
             align-items: center;
@@ -357,9 +365,9 @@ main {
 
     footer,
     .state {
-        line-height: 20px;
-        font-size: 12px;
+        font-size: 13px;
         text-align: center;
+        padding-bottom: 8px;
     }
 }
 
@@ -433,37 +441,12 @@ main {
     transform: translateX(24px);
 }
 
-.notice {
-    .notice-content {
-        > img {
-            max-width: 100%;
-            max-height: 500px;
-            margin: 0 auto;
-            border-radius: 8px;
-            box-shadow: 2px 2px 8px 1px #0000004f;
-        }
-
-        > div {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: crimson;
-            margin-top: 16px;
-
-            > span {
-                padding-left: 8px;
-            }
-        }
-    }
-}
-
 .poster {
     width: 600px;
     height: 1180px;
     position: absolute;
-    top: -150%;
-    left: -150%;
+    top: -500%;
+    left: -500%;
 
     .poster-img {
         width: 600px;
@@ -489,7 +472,175 @@ main {
     }
 }
 
-@media only screen and (max-width: 768px) {
+.notice-content {
+    > img {
+        max-width: 100%;
+        max-height: 500px;
+        margin: 0 auto;
+        border-radius: 8px;
+        box-shadow: 2px 2px 8px 1px #0000004f;
+    }
 
+    > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: crimson;
+        margin-top: 16px;
+
+        > span {
+            padding-left: 8px;
+        }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    header {
+        .header-content {
+            height: 42px;
+            padding: 0 12px;
+
+            > div {
+
+                > img {
+                    width: 32px;
+                    height: 32px;
+                    margin-right: 8px;
+                }
+            }
+        }
+    }
+
+    main {
+        overflow: hidden;
+        margin: 0 auto;
+
+        .title-mobile {
+            display: block;
+            font-family: love, sans-serif;
+            padding: 20px 0;
+
+
+            > div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+            }
+
+            > div:first-child {
+                color: #e0a24c;
+                font-size: 26px;
+                padding-bottom: 10px;
+            }
+        }
+
+        .title-pc {
+            display: none;
+        }
+
+        .card {
+            height: auto;
+
+            .card-content {
+
+                > .lamp1 {
+                    width: 100px;
+                    left: calc(50% - 180px);
+                }
+
+                > .lamp2 {
+                    width: 160px;
+                    left: calc(50% + 20px);
+                    top: 84%;
+                }
+            }
+
+            > svg {
+                width: 30px;
+                height: 30px;
+                margin: 0 auto;
+                fill: #dfddc6cc;
+
+                &:hover {
+                    fill: #f4f4f4;
+                    transform: scale(1);
+                }
+            }
+        }
+
+        .panel {
+            display: flex;
+            justify-content: center;
+            margin: 16px auto;
+        }
+
+        .stats {
+            margin: 10px auto;
+
+            > p,
+            > a {
+                height: 22px;
+                padding: 0 6px;
+                margin: 0 6px 0 0;
+                font-size: 12px;
+
+                > span {
+                    padding-left: 4px;
+                }
+
+                > img {
+                    margin-right: 1px;
+                }
+            }
+        }
+
+        footer,
+        .state {
+            font-size: 12px;
+            text-align: center;
+            padding-bottom: 6px;
+        }
+    }
+
+    .bg {
+        > .wicker {
+            width: 120px;
+            position: absolute;
+            top: 7%;
+            left: -38px;
+        }
+
+        > .moon {
+            position: absolute;
+            width: 160px;
+            right: -32px;
+            top: -20px;
+        }
+
+        > .rabbit1,
+        > .rabbit2 {
+            position: absolute;
+            width: 40px;
+            bottom: 12px;
+            left: 12px;
+            transition: all .24s;
+
+            &.hidden {
+                opacity: 0;
+            }
+        }
+
+        > .rabbit1 {
+            left: 54px;
+        }
+    }
+
+    .title-enter-active,
+    .title-leave-active {
+        will-change: transform;
+        transition: all .36s linear;
+    }
 }
 </style>
