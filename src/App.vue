@@ -51,10 +51,28 @@
         <div class="state">部分素材来源于网络，非商业用途，如有侵权请联系删除。</div>
         <footer>© 2023 All rights reserved. Powered by 黎</footer>
     </main>
+
+    <el-dialog class="notice" v-model="saveShow" title="保存贺卡" width="340px" align-center center style="border-radius: 8px;">
+        <div class="notice-content">
+            <img :src="cardUrl" alt="">
+            <div>
+                <el-button type="success" @click="save(true)">保存(或长按图片保存)</el-button>
+            </div>
+        </div>
+    </el-dialog>
+
+    <el-dialog class="notice" v-model="shareShow" title="分享贺卡" width="340px" align-center center style="border-radius: 8px;">
+        <div class="notice-content">
+            <img :src="cardUrl" alt="">
+            <div>
+                <el-button type="primary" @click="save(false)">分享(或长按图片分享)</el-button>
+            </div>
+        </div>
+    </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import {ref, onMounted, nextTick} from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { judgePC, getCreatedUrl, downloadImg, base64ToFile, getAuthorization, getUploadAuthorization } from '@/tools/common'
 import progress from './tools/progress'
 import { ElMessage } from 'element-plus'
@@ -133,9 +151,8 @@ const saveShow = ref(false)
 const shareShow = ref<boolean>(false)
 
 const createCard = async (isSave) => {
-    cardUrl.value = Draw.value.save()
-
-    console.log(cardUrl.value)
+    const url = Draw.value.save()
+    cardUrl.value = url
 
     if  (isSave) {
         saveShow.value = true
@@ -167,6 +184,8 @@ const save = async (isSave = true) => {
         const name = `黎-中秋贺卡${isSave ? '' : '分享'}-${cardInfo.value.name}-${Date.now()}`
 
         downloadImg(cardUrl.value, name)
+
+        ElMessage.success(isSave ? '保存成功' : '保存成功，快去分享给亲友吧~')
     } catch (e) {
         /* 捕获错误 */
     }
@@ -406,6 +425,31 @@ main {
 .title-leave-to {
     opacity: 0;
     transform: translateX(24px);
+}
+
+.notice {
+    .notice-content {
+        > img {
+            max-width: 100%;
+            max-height: 500px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 2px 2px 8px 1px #0000004f;
+        }
+
+        > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: crimson;
+            margin-top: 16px;
+
+            > span {
+                padding-left: 8px;
+            }
+        }
+    }
 }
 
 @media only screen and (max-width: 768px) {
