@@ -46,9 +46,6 @@ const Loading = ref<boolean>(false)
 fabric.Object.prototype.originX = 'center'
 fabric.Object.prototype.originY = 'center'
 
-/* 字父通信 */
-const emit = defineEmits(['drawComplete', 'updateLayer'])
-
 /* 初始化控件 */
 const initFabricControl = () => {
     fabric.Object.prototype.set(control)
@@ -78,29 +75,10 @@ const init = async () => {
 }
 
 /* 鼠标抬起 */
-const canvasMouseUp = (e: any) => {
-    const { target, transform } = e
-    console.log(target, transform)
-    // if (!target || !transform) return
-    // const type: string = transform.action
-    // const location: any = target.getCenterPoint()
-    // const layerIndex = LayerList.findIndex(i => i.uuid === Uuid.value)
-    // if (layerIndex === -1) return (Uuid.value = '')
-    //
-    // if (type === 'drag') {
-    //     const { x, y } = location
-    //     LayerList[layerIndex].x = x
-    //     LayerList[layerIndex].y = y
-    // } else if (type === 'scale') {
-    //     if (target.flipX || target.flipY) {
-    //         target.flipX = false
-    //         target.flipY = false
-    //     }
-    //     LayerList[layerIndex].scale = (target.scaleX || target.scaleY)
-    // } else if (type === 'rotate') {
-    //     LayerList[layerIndex].angle = target.angle
-    // } else { /* empty */ }
-}
+// const canvasMouseUp = (e: any) => {
+//     const { target, transform } = e
+//     console.log(target, transform)
+// }
 
 /* 元素缩放时 */
 const canvasMouseScaling = (e: any) => {
@@ -119,7 +97,7 @@ onMounted(async () => {
 
     /* 绑定交互事件 */
     /* 鼠标抬起事件 */
-    Canvas.on('mouse:up', canvasMouseUp)
+    // Canvas.on('mouse:up', canvasMouseUp)
     /* 元素缩放事件 */
     Canvas.on('object:scaling', canvasMouseScaling)
 })
@@ -135,14 +113,11 @@ const drawAll = async (canvas: any, layerList: LayerType[]) => {
     }
 }
 
-/* 绘制完成emit */
-const drawComplete = () => emit('drawComplete')
 /**
  * @function save 保存作品图及效果图
  * @return { String } result base64 保存/预览时返回
  */
 const save = ():  string => {
-    console.log(Canvas)
     return Canvas.toDataURL({
         format: 'png',
         left: 0,

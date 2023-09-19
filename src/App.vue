@@ -72,7 +72,7 @@
     <div id="poster" class="poster">
         <img class="poster-img" :src="cardUrl" alt="">
         <div class="poster-desc">
-            <span>长按识别右侧二维码，制作中秋贺卡！</span>
+            <span>长按识别右侧二维码，定制中秋贺卡！</span>
             <img src="https://cdn.xiaoli.vip/project/moon-card/code.png" alt="">
         </div>
     </div>
@@ -82,7 +82,7 @@
         <div class="notice-content">
             <img :src="cardUrl" alt="">
             <div>
-                <el-button type="success" @click="save(true)">保存(或长按图片保存)</el-button>
+                <el-button type="success" @click="save(true)">保存(移动端长按图片保存)</el-button>
             </div>
         </div>
     </el-dialog>
@@ -91,7 +91,7 @@
         <div class="notice-content">
             <img :src="shareUrl" alt="">
             <div>
-                <el-button type="primary" @click="save(false)">分享(或长按图片转发给朋友)</el-button>
+                <el-button type="primary" @click="save(false)">分享(移动端长按图片转发给朋友)</el-button>
             </div>
         </div>
     </el-dialog>
@@ -217,7 +217,6 @@ const save = async (isSave = true) => {
         ElMessage.success(isSave ? '保存成功' : '保存成功，快去分享给亲友吧~')
     } catch (e) {
         /* 捕获错误 */
-        alert(e)
     }
 }
 </script>
