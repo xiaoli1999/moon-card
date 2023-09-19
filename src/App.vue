@@ -142,7 +142,7 @@ const getAvatarList = async () => {
     const headers = { authorization, 'x-date': date, Accept: 'application/json' }
     const { data: { files } } = await axios({ method: 'GET', url, headers }).catch(() => ({})) as any
 
-    avatarList.value = (files || []).map(i => ({ ...i, url: `https://cdn.xiaoli.vip/img/moon-card/${ i.name }` }))
+    avatarList.value = (files || []).map(i => ({ ...i, url: `https://cdn.xiaoli.vip/img/moon-card/${ i.name }!moon` }))
 
     loadMore()
 
