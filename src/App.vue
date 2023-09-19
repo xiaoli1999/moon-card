@@ -124,6 +124,7 @@ const cardIndex = ref(0)
 const cardInfo: any = ref(cardList[cardIndex.value])
 const loading = ref<boolean>(false)
 const Draw = ref()
+globalThis.isEdit = false
 
 const changeCardTheme = (isAdd = true) => {
     if (isAdd) {
@@ -132,6 +133,7 @@ const changeCardTheme = (isAdd = true) => {
         (cardIndex.value === 0) ? cardIndex.value = cardList.length - 1 : cardIndex.value--
     }
     cardInfo.value = cardList[cardIndex.value]
+    globalThis.isEdit = false
 }
 
 const avatarList = ref<any[]>([])
@@ -140,9 +142,11 @@ const getAvatarList = async () => {
     const url = `${ userInfo.url }/${ atob(userInfo.bucket) }/${ userInfo.path }`
     const { date, authorization } = getAuthorization(userInfo)
     const headers = { authorization, 'x-date': date, Accept: 'application/json' }
-    const { data: { files } } = await axios({ method: 'GET', url, headers }).catch(() => ({})) as any
+    const { data } = await axios({ method: 'GET', url, headers }).catch(() => ({})) as any
 
-    avatarList.value = (files || []).map(i => ({ ...i, url: `https://cdn.xiaoli.vip/img/moon-card/${ i.name }!moon` }))
+    const files = ((data || {}).files) || []
+
+    avatarList.value = files.map(i => ({ ...i, url: `https://cdn.xiaoli.vip/img/moon-card/${ i.name }!moon` }))
 
     loadMore()
 
@@ -176,6 +180,8 @@ const saveShow = ref(false)
 const shareShow = ref<boolean>(false)
 
 const createCard = async (isSave) => {
+    if (!globalThis.isEdit) return ElMessage.warning('请先上传头像，定制专属中秋贺卡')
+
     loading.value = true
     isSave ? saveShow.value = true : shareShow.value = true
     cardUrl.value = Draw.value.save()

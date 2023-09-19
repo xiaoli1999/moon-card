@@ -5,11 +5,11 @@
  * @copyright 黎<https://www.xiaoli.vip>
  * @createDate 2023-09-15 17:46
  */
-import {fabric} from 'fabric'
-import {addOrReplaceLayer} from '../common'
-import {LayerType} from '../../types'
-import {ElMessage} from 'element-plus'
-import {getCreatedUrl} from '@/tools/common'
+import { fabric } from 'fabric'
+import { addOrReplaceLayer } from '../common'
+import { LayerType } from '../../types'
+import { ElMessage } from 'element-plus'
+import { getCreatedUrl } from '@/tools/common'
 
 /**
  * @function drawImgLayer 绘制图片图层
@@ -77,6 +77,7 @@ export const drawImgLayer = (Canvas: any, layer: LayerType) => {
 
                 // 刷新 Canvas 以显示更新后的图片元素
                 Canvas.renderAll()
+                globalThis.isEdit = true
             })
 
         })
