@@ -50,7 +50,7 @@
 
         <div class="card-title">中秋贺卡集</div>
         <div class="card-list">
-            <el-image v-for="url in avatarPageUrlList" :key="url" :src="url" :preview-src-list="avatarPageUrlList" />
+            <el-image v-for="(url, index) in avatarPageUrlList" :key="url" :src="url" :preview-src-list="avatarPageUrlList" :initial-index="index" />
         </div>
         <div v-if="pageNo * pageSize < avatarList.length" class="card-more">
             <el-button type="info" link @click="loadMore">查看更多</el-button>
