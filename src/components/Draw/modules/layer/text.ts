@@ -26,7 +26,7 @@ export const drawTextLayer = (Canvas: any, layer: any) => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             document.fonts.add(font)
-            const res = await font.load()
+            const res = await font.load().catch(() => ({}))
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             if (res && res.status === 'loaded') globalThis.fontObj[url] = url
