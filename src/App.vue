@@ -213,7 +213,7 @@ const save = async (isSave = true) => {
     try {
         /* 手动保存 */
         const name = `黎-中秋贺卡${isSave ? '' : '分享'}-${cardInfo.value.name}-${Date.now()}`
-        downloadImg(cardUrl.value, name)
+        downloadImg(isSave ? cardUrl.value : shareUrl.value, name)
         ElMessage.success(isSave ? '保存成功' : '保存成功，快去分享给亲友吧~')
     } catch (e) {
         /* 捕获错误 */
