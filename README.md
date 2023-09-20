@@ -24,9 +24,11 @@
 
 ## 使用教程
 **点击头像，点击右上角即可上传头像。**
+
 ![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4fad366f869945fc9e6345b5d4a2b6ad~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=293&h=121&s=98762&e=png&b=dc9a68)
 
 **双击文本，即可修改文本内容。**
+
 ![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad0c57ac5a6449fc8582301ef930dd28~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=243&h=114&s=75815&e=png&b=b16f4e)
 
 **头像和文本皆可移动位置、缩放、旋转等。**
