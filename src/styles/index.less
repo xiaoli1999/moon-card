@@ -63,9 +63,7 @@ a:active {
     font-weight: 600;
 }
 
-/* 解决fabric.js 文本框输入时页面跳跃 */
-textarea {
-    top: 0 !important;
-    left: 0 !important;
-    padding-top: 0 !important;
+/* 解决fabric.js 文本框输入时页面跳跃 https://github.com/fabricjs/fabric.js/issues/2904 */
+textarea[data-fabric-hiddentextarea] {
+    position: fixed !important;
 }
