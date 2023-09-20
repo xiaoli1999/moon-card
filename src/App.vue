@@ -180,7 +180,7 @@ const saveShow = ref(false)
 const shareShow = ref<boolean>(false)
 
 const createCard = async (isSave) => {
-    if (!globalThis.isEdit) return ElMessage.warning('请先上传头像，定制专属中秋贺卡')
+    if (!globalThis.isEdit) return ElMessage({ duration: 3600, message: '请上传头像，修改文案，定制中秋贺卡！', type: 'warning' })
 
     loading.value = true
     isSave ? saveShow.value = true : shareShow.value = true
