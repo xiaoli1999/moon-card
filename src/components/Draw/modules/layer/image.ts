@@ -31,14 +31,15 @@ export const drawImgLayer = (Canvas: any, layer: LayerType) => {
 
         /* 绘制自定义上传控件 */
         const uploadLayer: any = await drawImg(new URL('../../icons/upload-img.png', import.meta.url).href)
-        uploadLayer.scaleToHeight(40, true)
+        uploadLayer.scaleToHeight(48, true)
 
         const uploadImgDom = document.getElementById('uploadImg') as HTMLInputElement
 
         const customControl = new fabric.Control({
             x: 0.5,
             y: -0.5,
-            offsetY: 0, // 垂直偏移以使图标居中
+            offsetY: -36, // 垂直偏移以使图标居中
+            offsetX: 36, // 垂直偏移以使图标居中
             cursorStyle: 'pointer', // 鼠标悬停样式
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -50,7 +51,8 @@ export const drawImgLayer = (Canvas: any, layer: LayerType) => {
             }
         })
 
-        imgLayer.setControlsVisibility({ tr: false })
+        // 隐藏右上角控件
+        // imgLayer.setControlsVisibility({ tr: false })
 
         // 将自定义控制控件添加到元素1
         imgLayer.setControlVisible('mtr', true) // 显示元素1的默认控制控件
