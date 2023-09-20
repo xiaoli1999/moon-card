@@ -48,7 +48,7 @@
             <el-button type="primary" @click="createCard(false)" :disabled="loading">分享给朋友</el-button>
         </div>
 
-        <div class="card-title">中秋贺卡集</div>
+        <div class="card-title">中秋贺卡集({{ joinNumber }})</div>
         <div class="card-list">
             <el-image v-for="(url, index) in avatarPageUrlList" :key="url" :src="url" :preview-src-list="avatarPageUrlList" :initial-index="index" />
         </div>
@@ -122,6 +122,7 @@ let fileName = ''
 
 const cardIndex = ref(0)
 const cardInfo: any = ref(cardList[cardIndex.value])
+const joinNumber = ref(0)
 const loading = ref<boolean>(false)
 const Draw = ref()
 globalThis.isEdit = false
@@ -155,7 +156,8 @@ const getAvatarList = async () => {
     if (files && files.length) {
         const name = files[0].name.split('.png')[0]
         const arr = name.split('-')
-        num = Number(arr[arr.length - 1] || 0)  + 1
+        joinNumber.value = Number(arr[arr.length - 1] || 0)
+        num = joinNumber.value + 1
     }
 
     fileName = `li-${ 1e14 - Date.now() }-${ num }.png`
@@ -357,11 +359,12 @@ main {
     }
 
     .card-title {
+        position: relative;
+        width: fit-content;
         font-size: 24px;
         font-weight: 600;
         font-family: love, sans-serif;
         text-align: center;
-        letter-spacing: 1px;
         margin: 16px auto;
     }
 
@@ -627,7 +630,6 @@ main {
 
         .card-title {
             font-size: 20px;
-            letter-spacing: 1px;
         }
 
         .card-list {
