@@ -5,12 +5,15 @@
 ### 前言
 露从今夜白，月是故乡明！中秋将至，团圆之时近。中秋将至，采黎为大家带来 **定制中秋贺卡**。值此佳节，让我们通过贺卡传递温馨祝福，庆祝团圆，寄托思念。
 
+### 地址
+[github✈️ https://github.com/xiaoli1999/moon-card](https://github.com/xiaoli1999/moon-card)
+
+[gitee✈️ https://gitee.com/cui-zhe/moon-card](https://gitee.com/cui-zhe/moon-card)
+
 ### 预览
 **[效果直达车](https://www.xiaoli.vip/moon-card)**
 
 **[效果直达车（github备用链接）](https://xiaoli1999.github.io/moon-card)**
-
-**[github项目地址（欢迎⭐）](https://github.com/xiaoli1999/moon-card)**
 
 ### 效果
 ![预览](./preview.png)
